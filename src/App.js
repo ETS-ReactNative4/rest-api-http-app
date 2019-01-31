@@ -2,33 +2,35 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
 
+const url = "https://jsonplaceholder.typicode.com/posts";
 class App extends Component {
   state = {
     posts: []
   };
   async componentDidMount() {
-    const response = await axios.get(
-      "https://jsonplaceholder.typicode.com/posts"
-    );
+    const response = await axios.get(url);
     console.log(this.state.posts);
     this.setState({ posts: response.data });
   }
+
   handleAdd = async () => {
     const myPost = {
       title: "aaaa",
       body: "bbbb"
     };
-    const response = await axios.post(
-      "https://jsonplaceholder.typicode.com/posts",
-      myPost
-    );
+    const response = await axios.post(url, myPost);
     const posts = [response.data, ...this.state.posts];
     this.setState({ posts });
-    console.log(response.data);
   };
 
-  handleUpdate = post => {
-    console.log("Update", post);
+  handleUpdate = async post => {
+    post.title = "Updated";
+    const response = await axios.put(url + "/" + post.id, post);
+    const posts = [...this.state.posts];
+    const index = posts.indexOf(post);
+    posts[index] = response.data;
+    this.setState({ posts });
+    console.log(response.data);
   };
 
   handleDelete = post => {
