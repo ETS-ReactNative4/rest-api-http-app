@@ -13,8 +13,18 @@ class App extends Component {
     console.log(this.state.posts);
     this.setState({ posts: response.data });
   }
-  handleAdd = () => {
-    console.log("Add");
+  handleAdd = async () => {
+    const myPost = {
+      title: "aaaa",
+      body: "bbbb"
+    };
+    const response = await axios.post(
+      "https://jsonplaceholder.typicode.com/posts",
+      myPost
+    );
+    const posts = [response.data, ...this.state.posts];
+    this.setState({ posts });
+    console.log(response.data);
   };
 
   handleUpdate = post => {
