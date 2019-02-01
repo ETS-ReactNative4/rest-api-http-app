@@ -30,14 +30,19 @@ class App extends Component {
     const index = posts.indexOf(post);
     posts[index] = response.data;
     this.setState({ posts });
-    console.log(response.data);
   };
 
   handleDelete = async post => {
-    await axios.delete(url + "/" + post.id);
+    const originalPosts = this.state.posts;
     const posts = this.state.posts.filter(p => p.id !== post.id);
-
     this.setState({ posts });
+
+    try {
+      await axios.delete(url + "/" + post.id);
+    } catch (error) {
+      alert("Could not delete the post!");
+      this.setState({ posts: originalPosts });
+    }
   };
 
   render() {
