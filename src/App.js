@@ -3,17 +3,6 @@ import axios from "axios";
 import "./App.css";
 
 const url = "https://jsonplaceholder.typicode.com/posts";
-axios.interceptors.response.use(null, error => {
-  const unexpected =
-    error.response &&
-    error.response.status >= 400 &&
-    error.response.status < 500;
-  if (!unexpected) {
-    console.log("Logging error", error);
-    alert("Unexpected error occured!");
-  }
-  return Promise.reject(error);
-});
 
 class App extends Component {
   state = {
@@ -49,7 +38,7 @@ class App extends Component {
     this.setState({ posts });
 
     try {
-      await axios.delete("o" + url + "/" + post.id);
+      await axios.delete(url + "/" + post.id);
     } catch (exception) {
       if (exception.response && exception.response.status === 404)
         alert("The post you are trying to delete, does not exist!");
