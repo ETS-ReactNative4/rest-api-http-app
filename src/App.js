@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import http from "./services/http-service";
 import "./App.css";
 
 const url = "https://jsonplaceholder.typicode.com/posts";
@@ -9,7 +9,7 @@ class App extends Component {
     posts: []
   };
   async componentDidMount() {
-    const response = await axios.get(url);
+    const response = await http.get(url);
     this.setState({ posts: response.data });
   }
 
@@ -18,14 +18,14 @@ class App extends Component {
       title: "aaaa",
       body: "bbbb"
     };
-    const response = await axios.post(url, myPost);
+    const response = await http.post(url, myPost);
     const posts = [response.data, ...this.state.posts];
     this.setState({ posts });
   };
 
   handleUpdate = async post => {
     post.title = "Updated";
-    const response = await axios.put(url + "/" + post.id, post);
+    const response = await http.put(url + "/" + post.id, post);
     const posts = [...this.state.posts];
     const index = posts.indexOf(post);
     posts[index] = response.data;
@@ -38,7 +38,7 @@ class App extends Component {
     this.setState({ posts });
 
     try {
-      await axios.delete(url + "/" + post.id);
+      await http.delete(url + "/" + post.id);
     } catch (exception) {
       if (exception.response && exception.response.status === 404)
         alert("The post you are trying to delete, does not exist!");
