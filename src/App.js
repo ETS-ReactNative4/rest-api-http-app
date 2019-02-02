@@ -9,7 +9,6 @@ class App extends Component {
   };
   async componentDidMount() {
     const response = await axios.get(url);
-    console.log(this.state.posts);
     this.setState({ posts: response.data });
   }
 
@@ -39,9 +38,16 @@ class App extends Component {
 
     try {
       await axios.delete(url + "/" + post.id);
-    } catch (error) {
-      alert("Could not delete the post!");
+    } catch (exception) {
+      if (exception.response && exception.response.status === 404) {
+        alert("The post you are trying to delete, does not exist!");
+      } else {
+        console.log("Logging error", exception);
+        alert("Unexpected error occured!");
+      }
       this.setState({ posts: originalPosts });
+      console.log(exception.request);
+      console.log(exception.response);
     }
   };
 
